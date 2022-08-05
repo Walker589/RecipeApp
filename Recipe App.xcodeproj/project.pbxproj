@@ -8,11 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		A232C2C7289AC0CC00FBBE53 /* RecipeDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A232C2C6289AC0CC00FBBE53 /* RecipeDetailView.swift */; };
+		A2AB4E59289DA17500D107AB /* recipes.json in Resources */ = {isa = PBXBuildFile; fileRef = A2AB4E58289DA17500D107AB /* recipes.json */; };
 		A2C48277289A6D4700B69CF1 /* Recipe_App.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2C48276289A6D4700B69CF1 /* Recipe_App.swift */; };
 		A2C48279289A6D4700B69CF1 /* RecipeListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2C48278289A6D4700B69CF1 /* RecipeListView.swift */; };
 		A2C4827B289A6D4700B69CF1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A2C4827A289A6D4700B69CF1 /* Assets.xcassets */; };
 		A2C4827E289A6D4700B69CF1 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A2C4827D289A6D4700B69CF1 /* Preview Assets.xcassets */; };
-		A2C4828A289A6E0300B69CF1 /* recipes.json in Resources */ = {isa = PBXBuildFile; fileRef = A2C48289289A6E0300B69CF1 /* recipes.json */; };
 		A2C4828C289A6E5700B69CF1 /* Recipe.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2C4828B289A6E5700B69CF1 /* Recipe.swift */; };
 		A2C4828E289A6F9500B69CF1 /* RecipeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2C4828D289A6F9400B69CF1 /* RecipeModel.swift */; };
 		A2C48290289A708000B69CF1 /* DataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2C4828F289A708000B69CF1 /* DataService.swift */; };
@@ -21,12 +21,12 @@
 
 /* Begin PBXFileReference section */
 		A232C2C6289AC0CC00FBBE53 /* RecipeDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeDetailView.swift; sourceTree = "<group>"; };
+		A2AB4E58289DA17500D107AB /* recipes.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = recipes.json; sourceTree = "<group>"; };
 		A2C48273289A6D4700B69CF1 /* Recipe App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Recipe App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A2C48276289A6D4700B69CF1 /* Recipe_App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Recipe_App.swift; sourceTree = "<group>"; };
 		A2C48278289A6D4700B69CF1 /* RecipeListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeListView.swift; sourceTree = "<group>"; };
 		A2C4827A289A6D4700B69CF1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A2C4827D289A6D4700B69CF1 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		A2C48289289A6E0300B69CF1 /* recipes.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = recipes.json; sourceTree = "<group>"; };
 		A2C4828B289A6E5700B69CF1 /* Recipe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Recipe.swift; sourceTree = "<group>"; };
 		A2C4828D289A6F9400B69CF1 /* RecipeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeModel.swift; sourceTree = "<group>"; };
 		A2C4828F289A708000B69CF1 /* DataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataService.swift; sourceTree = "<group>"; };
@@ -112,7 +112,7 @@
 		A2C48287289A6D8F00B69CF1 /* Data */ = {
 			isa = PBXGroup;
 			children = (
-				A2C48289289A6E0300B69CF1 /* recipes.json */,
+				A2AB4E58289DA17500D107AB /* recipes.json */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -184,7 +184,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A2C4827E289A6D4700B69CF1 /* Preview Assets.xcassets in Resources */,
-				A2C4828A289A6E0300B69CF1 /* recipes.json in Resources */,
+				A2AB4E59289DA17500D107AB /* recipes.json in Resources */,
 				A2C4827B289A6D4700B69CF1 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
