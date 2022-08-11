@@ -20,7 +20,8 @@ struct RecipeListView: View {
                 Text("All Recipes")
                     .bold()
                     .padding(.top, 40)
-                    .font(.largeTitle)
+                    .font(Font.custom("Avenir Heavy", size: 24))
+                    .foregroundColor(.primary)
                 
                 
                 ScrollView {
@@ -39,8 +40,13 @@ struct RecipeListView: View {
                                         .clipped()
                                         .cornerRadius(5)
                                     
-                                    Text(recipe.name)
-                                        .foregroundColor(.black)
+                                    VStack(alignment: .leading) {
+                                        Text(recipe.name)
+                                            .foregroundColor(.primary)
+                                            .font(Font.custom("Avenir Heavy", size: 16))
+                                        RecipeHighlightsView(highlights: recipe.highlights)
+                                            .foregroundColor(.primary)
+                                    }
                                 }
                             }
                         }
@@ -57,5 +63,6 @@ struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         RecipeListView()
             .environmentObject(RecipeModel())
+            .preferredColorScheme(.dark)
     }
 }

@@ -36,5 +36,6 @@ struct RecipeTabView: View {
 struct RecipeTabView_Previews: PreviewProvider {
     static var previews: some View {
         RecipeTabView()
+            .preferredColorScheme(.dark)
     }
 }
