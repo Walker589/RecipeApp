@@ -62,7 +62,7 @@ class RecipeModel : ObservableObject {
 
         if var unit = ingredient.unit {
             
-            if wholePortions > 1 {
+            if wholePortions > 1 || (wholePortions == 1 && numerator > 0) {
                 
                 // Calculate Appropriate Suffix
                 if unit.suffix(2) == "ch" {

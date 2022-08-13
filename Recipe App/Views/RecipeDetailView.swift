@@ -55,7 +55,9 @@ struct RecipeDetailView: View {
                         .padding([.bottom, .top], 5)
                     
                     ForEach(recipe.ingredients) { ingredient in
-                        Text("• " + RecipeModel.getPortion(ingredient: ingredient, recipeServings: recipe.servings, targetServings: selectedServingSize) + " " +  ingredient.name.lowercased())
+                        Text("• " + RecipeModel.getPortion(ingredient: ingredient,
+                                                           recipeServings: recipe.servings,
+                                                           targetServings: selectedServingSize) + " " +  ingredient.name.lowercased())
                             .font(Font.custom("Avenir", size: 15))
                     }
                 }
