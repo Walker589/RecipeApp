@@ -16,7 +16,6 @@ struct RecipeFeaturedView: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            
             Text("Featured Recipes")
                 .bold()
                 .padding(.leading)
@@ -24,9 +23,7 @@ struct RecipeFeaturedView: View {
                 .font(Font.custom("Avenir Heavy", size: 24))
             
             GeometryReader { geo in
-                
                 TabView(selection: $tabSelectionIndex) {
-                    
                     ForEach(0..<model.recipes.count) { index in
                         if model.recipes[index].featured {
                             
@@ -60,29 +57,25 @@ struct RecipeFeaturedView: View {
                                    alignment: .center)
                             .cornerRadius(15)
                             .shadow(color: Color(.sRGB, red: 0, green: 0, blue: 0, opacity: 0.5), radius: 10, x: -5, y: 5)
-                            
                         }
                     }
                 }
                 .tabViewStyle(PageTabViewStyle(indexDisplayMode: .automatic))
                 .indexViewStyle(PageIndexViewStyle(backgroundDisplayMode: .always))
-                
             }
             
-            VStack(alignment: .leading, spacing: 10) {
-                Text("Preperation Time:")
-                    .font(Font.custom("Avenir Heavy", size: 16))
-                Text(model.recipes[tabSelectionIndex].prepTime)
-                    .font(Font.custom("Avenir", size: 15))
+            VStack(alignment: .leading, spacing: 0) {
+                FeaturedViewDetails(title: "Preperation Time", info: model.recipes[tabSelectionIndex].prepTime)
                 
                 Text("Highlights:")
                     .font(Font.custom("Avenir Heavy", size: 16))
                 RecipeHighlightsView(highlights: model.recipes[tabSelectionIndex].highlights)
                     .font(Font.custom("Avenir", size: 15))
+                
+                FeaturedViewDetails(title: "Cuisine", info: model.recipes[tabSelectionIndex].category)
             }
             .padding([.leading, .bottom])
             .foregroundColor(.primary)
-            
         }.onAppear {
             setFeaturedIndex()
         }
