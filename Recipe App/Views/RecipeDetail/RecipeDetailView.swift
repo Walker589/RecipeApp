@@ -18,8 +18,8 @@ struct RecipeDetailView: View {
         ScrollView {
             
             VStack(alignment: .leading) {
-                
-                Image(recipe.image)
+                let image = UIImage(data: recipe.image ?? Data())
+                Image(uiImage: image ?? UIImage())
                     .resizable()
                     .scaledToFill()
                 
@@ -54,11 +54,11 @@ struct RecipeDetailView: View {
                         .font(Font.custom("Avenir Heavy", size: 16))
                         .padding([.bottom, .top], 5)
                     
-                    ForEach(recipe.ingredients) { ingredient in
+                    ForEach(recipe.ingredients.allObjects as! [Ingredient]) { ingredient in
                         Text("• " + RecipeModel.getPortion(ingredient: ingredient,
                                                            recipeServings: recipe.servings,
                                                            targetServings: selectedServingSize) + " " +  ingredient.name.lowercased())
-                            .font(Font.custom("Avenir", size: 15))
+                        .font(Font.custom("Avenir", size: 15))
                     }
                 }
                 .padding(.horizontal, 10)

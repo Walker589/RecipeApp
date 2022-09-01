@@ -8,7 +8,7 @@
 import Foundation
 
 struct Rational {
-
+    
     static func greatestCommonDivisor(_ a: Int, _ b: Int) -> Int {
         
         // GCD(0, b) = b

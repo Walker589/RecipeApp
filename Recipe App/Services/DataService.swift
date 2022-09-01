@@ -9,11 +9,11 @@ import Foundation
 
 class DataService {
     
-    static func getLocalData() -> [Recipe] {
+    static func getLocalData() -> [RecipeJSON] {
         let pathString = Bundle.main.path(forResource: "recipes", ofType: "json")
         
         guard pathString != nil else {
-            return [Recipe]()
+            return [RecipeJSON]()
         }
         
         let url = URL(fileURLWithPath: pathString!)
@@ -24,7 +24,7 @@ class DataService {
             let decoder = JSONDecoder()
             
             do {
-                let recipeData = try decoder.decode([Recipe].self, from: data)
+                let recipeData = try decoder.decode([RecipeJSON].self, from: data)
                 
                 for recipe in recipeData {
                     recipe.id = UUID()
@@ -45,8 +45,6 @@ class DataService {
             print(error)
         }
         
-        return [Recipe]()
-        
+        return [RecipeJSON]()
     }
-    
 }

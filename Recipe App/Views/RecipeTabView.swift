@@ -8,10 +8,10 @@
 import SwiftUI
 
 struct RecipeTabView: View {
-    @State var selectedTab = Constants.featuredTab
+    @State var tabSelection = 0
     
     var body: some View {
-        TabView(selection: $selectedTab) {
+        TabView(selection: $tabSelection) {
             RecipeFeaturedView()
                 .padding(.bottom)
                 .tabItem {
@@ -20,15 +20,6 @@ struct RecipeTabView: View {
                         Text("Featured")
                     }
                 }.tag(Constants.featuredTab)
-            
-            RecipeCategoryView(selectedTab: $selectedTab)
-                .padding(.bottom)
-                .tabItem {
-                    VStack {
-                        Image(systemName: "square.grid.2x2")
-                        Text("Categories")
-                    }
-                }.tag(Constants.categoriesTab)
             
             RecipeListView()
                 .padding(.bottom)
@@ -39,14 +30,14 @@ struct RecipeTabView: View {
                     }
                 }.tag(Constants.listTab)
             
-        }
-        .environmentObject(RecipeModel())
-    }
-}
-
-struct RecipeTabView_Previews: PreviewProvider {
-    static var previews: some View {
-        RecipeTabView()
-            .preferredColorScheme(.dark)
+            AddRecipeView(tabSelection: $tabSelection)
+                .padding(.bottom)
+                .tabItem {
+                    VStack {
+                        Image(systemName: "plus")
+                        Text("Add Recipe")
+                    }
+                }.tag(Constants.addRecipeTab)
+        }.environmentObject(RecipeModel())
     }
 }

@@ -8,9 +8,9 @@
 import Foundation
 
 struct Constants {
-    static var defaultListFilter = "All Recipes"
+    static var isDataPreloaded = "isDataPreloaded"
     
     static var featuredTab = 0
-    static var categoriesTab = 1
-    static var listTab = 2
+    static var listTab = 1
+    static var addRecipeTab = 2
 }

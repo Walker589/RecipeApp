@@ -28,10 +28,3 @@ struct RecipeHighlightsView: View {
             .foregroundColor(.primary)
     }
 }
-
-struct RecipeHighlightsView_Previews: PreviewProvider {
-    static var previews: some View {
-        RecipeHighlightsView(highlights: ["test", "test 2", "test 3"])
-            .preferredColorScheme(.dark)
-    }
-}
