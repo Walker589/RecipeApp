@@ -8,16 +8,15 @@
 import SwiftUI
 
 struct RecipeListView: View {
-    @FetchRequest(sortDescriptors: [NSSortDescriptor(key: "name", ascending: true)])
-    private var recipes: FetchedResults<Recipe>
+    @EnvironmentObject var model: RecipeModel
     
     @State private var filterBy = ""
     
     private var filteredRecipes: [Recipe] {
         if filterBy.trimmingCharacters(in: .whitespacesAndNewlines) == "" {
-            return Array(recipes)
+            return model.recipes
         } else {
-            return recipes.filter { recipe in
+            return model.recipes.filter { recipe in
                 return recipe.name.lowercased().contains(filterBy.lowercased())
             }
         }
@@ -28,7 +27,6 @@ struct RecipeListView: View {
             VStack(alignment: .leading) {
                 Text("All Recipes")
                     .bold()
-                    .padding(.top, 40)
                     .font(Font.custom("Avenir Heavy", size: 24))
                     .foregroundColor(.primary)
                 
@@ -37,13 +35,12 @@ struct RecipeListView: View {
                 
                 ScrollView {
                     LazyVStack(alignment: .leading) {
-                        ForEach(filteredRecipes) { recipe in
-                            
+                        ForEach(0..<filteredRecipes.count, id: \.self) { index in
                             NavigationLink {
-                                RecipeDetailView(recipe: recipe)
+                                RecipeDetailView(recipe: filteredRecipes[index])
                             } label: {
                                 HStack(spacing: 20) {
-                                    let image = UIImage(data: recipe.image ?? Data())
+                                    let image = UIImage(data: filteredRecipes[index].image)
                                     Image(uiImage: image ?? UIImage())
                                         .resizable()
                                         .scaledToFill()
@@ -52,10 +49,10 @@ struct RecipeListView: View {
                                         .cornerRadius(5)
                                     
                                     VStack(alignment: .leading) {
-                                        Text(recipe.name)
+                                        Text(filteredRecipes[index].name)
                                             .foregroundColor(.primary)
                                             .font(Font.custom("Avenir Heavy", size: 16))
-                                        RecipeHighlightsView(highlights: recipe.highlights)
+                                        RecipeHighlightsView(highlights: filteredRecipes[index].highlights)
                                             .foregroundColor(.primary)
                                     }
                                 }

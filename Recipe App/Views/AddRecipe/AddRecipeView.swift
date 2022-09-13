@@ -2,151 +2,181 @@
 //  AddRecipeView.swift
 //  Recipe App
 //
-//  Created by Ali Earp on 31/08/2022.
+//  Created by Ali Earp on 01/09/2022.
 //
 
 import SwiftUI
+import FirebaseStorage
 
 struct AddRecipeView: View {
-    @Environment(\.managedObjectContext) var viewContext
-    
-    @Binding var tabSelection: Int
-    
-    @State private var name = ""
-    @State private var summary = ""
-    @State private var category = ""
-    @State private var featured = ""
-    @State private var prepTime = ""
-    @State private var cookTime = ""
-    @State private var totalTime = ""
-    @State private var servings = ""
-    
-    @State private var highlights = [String]()
-    @State private var directions = [String]()
-    
-    @State private var ingredients = [IngredientJSON]()
-    
-    @State private var recipeImage: UIImage?
+    @EnvironmentObject var model: RecipeModel
     
     @State private var isShowingImagePicker = false
-    @State private var selectedImageSource = UIImagePickerController.SourceType.photoLibrary
-    @State private var image = Image("noImageAvailable")
+    @State private var image = Image(systemName: "photo.fill")
     
     var body: some View {
         VStack {
             HStack {
-                Button("Clear") {
-                    clearAllFields()
-                }
+                Text("Add Recipe")
+                    .bold()
+                    .font(Font.custom("Avenir Heavy", size: 24))
+                
                 Spacer()
-                Button("Add") {
-                    addRecipe()
-                    tabSelection = Constants.listTab
+                
+                Button("Clear") {
+                    model.cuisine = ""
+                    model.servings = ""
+                    model.prepTime = ""
+                    model.recipeImage = nil
+                    model.errorMessage = ""
+                    image = Image(systemName: "photo.fill")
                 }
             }
             
             ScrollView(showsIndicators: false) {
-                VStack {
-                    image
-                        .resizable()
-                        .scaledToFit()
-                    
-                    HStack {
-                        Button("Photo Library") {
-                            selectedImageSource = .photoLibrary
-                            isShowingImagePicker = true
+                TextField("Recipe Name", text: $model.recipeName)
+                    .multilineTextAlignment(.center)
+                    .font(.headline)
+                    .padding([.bottom, .horizontal])
+
+                ZStack(alignment: .topTrailing) {
+                    if image == Image(systemName: "photo.fill") {
+                        image
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 350)
+                    } else {
+                        image
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                            .frame(width: 350, height: 350)
+                            .cornerRadius(10)
+                    }
+                
+                    Button {
+                        isShowingImagePicker = true
+                    } label: {
+                        VStack(spacing: 5) {
+                            Image(systemName: "square.and.pencil")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(width: 20)
+                            Text("EDIT")
                         }
-                        
-                        Text(" | ")
-                        
-                        Button("Camera") {
-                            selectedImageSource = .camera
-                            isShowingImagePicker = true
-                        }
+                        .foregroundColor(.white)
+                        .padding(20)
                     }
                     .sheet(isPresented: $isShowingImagePicker, onDismiss: loadImage) {
-                        ImagePicker(selectedSource: selectedImageSource, recipeImage: $recipeImage)
+                        ImagePicker(recipeImage: $model.recipeImage)
+                    }
+                }
+                
+                Group {
+                    Group {
+                        HStack {
+                            Text("Ingredients")
+                            Spacer()
+                            Text("\(model.ingredients.count) \(model.ingredients.count == 1 ? "INGREDIENT" : "INGREDIENTS")")
+                                .bold()
+                                .foregroundColor(.green)
+                        }.padding(.vertical)
+                        
+                        Divider()
+                        
+                        HStack {
+                            Text("Directions")
+                            Spacer()
+                            Text("\(model.directions.count) \(model.directions.count == 1 ? "STEP" : "STEPS")")
+                                .bold()
+                                .foregroundColor(.green)
+                        }.padding(.vertical)
+                        
+                        Divider()
                     }
                     
-                    AddMetaData(name: $name,
-                                summary: $summary,
-                                category: $category,
-                                featured: $featured,
-                                prepTime: $prepTime,
-                                cookTime: $cookTime,
-                                totalTime: $totalTime,
-                                servings: $servings)
-                    
-                    AddListData(list: $highlights, title: "Highlights", placeholderText: "Vegetarian")
-                    AddListData(list: $directions, title: "Directions", placeholderText: "Add the oil to the pan")
-                    
-                    AddIngredientData(ingredients: $ingredients)
+                    Group {
+                        HStack {
+                            Text("Cuisine")
+                                .padding(.trailing)
+                            Spacer()
+                            TextField("Cuisine", text: $model.cuisine)
+                                .multilineTextAlignment(.trailing)
+                        }.padding(.vertical)
+                        
+                        Divider()
+                        
+                        HStack {
+                            Text("Servings")
+                                .padding(.trailing)
+                            Spacer()
+                            TextField("Servings", text: $model.servings)
+                                .multilineTextAlignment(.trailing)
+                        }.padding(.vertical)
+                        
+                        Divider()
+                        
+                        HStack {
+                            Text("Prep Time")
+                                .padding(.trailing)
+                            Spacer()
+                            TextField("Prep Time", text: $model.prepTime)
+                                .multilineTextAlignment(.trailing)
+                        }.padding(.vertical)
+                        
+                        Divider()
+                        
+                        HStack {
+                            Text("Access")
+                                .padding(.trailing)
+                            Picker("access", selection: $model.isPrivate) {
+                                Text("Private").tag(true)
+                                Text("Public").tag(false)
+                            }
+                            .pickerStyle(SegmentedPickerStyle())
+                            .padding(.leading, 75)
+                        }.padding(.vertical)
+                        
+                        Divider()
+                    }
+                }
+                .font(.subheadline)
+                
+                if model.errorMessage != "" {
+                    Text(model.errorMessage)
+                        .foregroundColor(.red)
+                        .multilineTextAlignment(.center)
+                        .padding(.top)
+                }
+                
+                Button {
+                    model.addRecipe()
+                } label: {
+                    ZStack {
+                        Rectangle()
+                            .foregroundColor(.green)
+                            .cornerRadius(50)
+                            .frame(height: 55)
+                        
+                        Text("Add Recipe")
+                            .bold()
+                            .foregroundColor(.white)
+                    }
+                    .padding([.bottom, .horizontal], 40)
+                    .padding(.top)
                 }
             }
-        }.padding(.horizontal)
+        }
+        .padding([.horizontal, .bottom])
+        .onAppear {
+            loadImage()
+        }
     }
     
     func loadImage() {
-        if recipeImage != nil {
-            image = Image(uiImage: recipeImage!)
-        }
-    }
-    
-    func clearAllFields() {
-        name = ""
-        summary = ""
-        category = ""
-        featured  = ""
-        prepTime = ""
-        cookTime = ""
-        totalTime = ""
-        servings = ""
-        
-        highlights = [String]()
-        directions = [String]()
-        
-        ingredients = [IngredientJSON]()
-        
-        image = Image("noImageAvailable")
-    }
-    
-    func addRecipe() {
-        let recipe = Recipe(context: viewContext)
-        recipe.id = UUID()
-        recipe.name = name
-        recipe.category = category
-        recipe.summary = summary
-        recipe.category = category
-        if featured.lowercased() == "true" {
-            recipe.featured = true
+        if model.recipeImage != nil {
+            image = Image(uiImage: model.recipeImage!)
         } else {
-            recipe.featured = false
-        }
-        recipe.prepTime = prepTime
-        recipe.cookTime = cookTime
-        recipe.totalTime = totalTime
-        recipe.servings = Int(servings) ?? 1
-        
-        recipe.highlights = highlights
-        recipe.directions = directions
-        
-        recipe.image = recipeImage?.pngData()
-        
-        for i in ingredients {
-            let ingredient = Ingredient(context: viewContext)
-            ingredient.id = UUID()
-            ingredient.name = i.name
-            ingredient.unit = i.unit
-            ingredient.num = i.num ?? 1
-            ingredient.denom = i.denom ?? 1
-            
-            recipe.addToIngredients(ingredient)
-        }
-        
-        do {
-            try viewContext.save()
-        } catch {
-            print(error.localizedDescription)
+            image = Image(systemName: "photo.fill")
         }
     }
 }

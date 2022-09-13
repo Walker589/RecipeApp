@@ -6,21 +6,19 @@
 //
 
 import Foundation
+import UIKit
 
-class RecipeJSON : Identifiable, Decodable {
+class Recipe : Identifiable, Decodable {
     
-    var id : UUID?
-    var name : String
-    var category: String
-    var featured : Bool
-    var image : String
-    var description : String
-    var prepTime : String
-    var cookTime : String
-    var totalTime : String
-    var servings : Int
-    var highlights : [String]
-    var ingredients : [IngredientJSON]
-    var directions : [String]
+    var id : String = ""
+    var name : String = ""
+    var cuisine: String = ""
+    var featured : Bool = false
+    var image : Data = Data()
+    var prepTime : String = ""
+    var servings : Int = 0
+    var highlights : [String] = [String]()
+    var ingredients : [Ingredient] = [Ingredient]()
+    var directions : [String] = [String]()
     
 }

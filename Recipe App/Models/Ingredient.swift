@@ -7,12 +7,12 @@
 
 import Foundation
 
-class IngredientJSON : Identifiable, Decodable {
+class Ingredient : Identifiable, Decodable {
     
-    var id : UUID?
+    var id : String = ""
     var name : String = ""
-    var num : Int?
-    var denom : Int?
-    var unit : String?
+    var num : Int? = 0
+    var denom : Int? = 0
+    var unit : String? = ""
     
 }

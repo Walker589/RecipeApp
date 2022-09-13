@@ -6,15 +6,23 @@
 //
 
 import SwiftUI
+import Firebase
 
 @main
 struct Recipe_App: App {
-    let persistenceController = PersistenceController.shared
+    init() {
+        FirebaseApp.configure()
+    }
     
     var body: some Scene {
         WindowGroup {
-            RecipeTabView()
-                .environment(\.managedObjectContext, persistenceController.container.viewContext)
+            LaunchPage()
+                .environmentObject(RecipeModel())
+            
+            // TODO: Add highlights
+            // TODO: (Maybe) Delete recipes
+            // TODO: Add name to recipes
+            // TODO: Add bar at top of add recipe
         }
     }
 }

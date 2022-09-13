@@ -8,17 +8,14 @@
 import SwiftUI
 
 struct RecipeDetailView: View {
-    
-    var recipe : Recipe
+    var recipe: Recipe
     
     @State var selectedServingSize = 2
     
     var body: some View {
-        
-        ScrollView {
-            
+        ScrollView(showsIndicators: false) {
             VStack(alignment: .leading) {
-                let image = UIImage(data: recipe.image ?? Data())
+                let image = UIImage(data: recipe.image)
                 Image(uiImage: image ?? UIImage())
                     .resizable()
                     .scaledToFill()
@@ -54,7 +51,7 @@ struct RecipeDetailView: View {
                         .font(Font.custom("Avenir Heavy", size: 16))
                         .padding([.bottom, .top], 5)
                     
-                    ForEach(recipe.ingredients.allObjects as! [Ingredient]) { ingredient in
+                    ForEach(recipe.ingredients) { ingredient in
                         Text("• " + RecipeModel.getPortion(ingredient: ingredient,
                                                            recipeServings: recipe.servings,
                                                            targetServings: selectedServingSize) + " " +  ingredient.name.lowercased())
@@ -82,15 +79,5 @@ struct RecipeDetailView: View {
                 
             }
         }
-    }
-}
-
-struct RecipeDetailView_Previews: PreviewProvider {
-    static var previews: some View {
-        
-        let model = RecipeModel()
-        
-        RecipeDetailView(recipe: model.recipes[0])
-            .preferredColorScheme(.dark)
     }
 }
