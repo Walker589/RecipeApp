@@ -78,6 +78,6 @@ struct RecipeDetailView: View {
                 .foregroundColor(.primary)
                 
             }
-        }
+        }.navigationBarTitleDisplayMode(.inline)
     }
 }

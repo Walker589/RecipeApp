@@ -12,6 +12,7 @@ import FirebaseAuth
 
 struct LaunchPage: View {
     @EnvironmentObject var model: RecipeModel
+    @Environment(\.colorScheme) var colorScheme
     
     let storage = Storage.storage()
     
@@ -25,11 +26,13 @@ struct LaunchPage: View {
             NavigationView {
                 if model.profileImage != nil {
                     VStack {
-                        Text("\(model.loginMode == true ? "Welcome Back," : "Welcome,") \(model.userName)")
+                        Text("Hello, \(model.userName)")
                             .font(.system(.title, design: .rounded))
                             .bold()
                             .padding(40)
 
+                        Spacer()
+                        
                         if let currentUser = Auth.auth().currentUser {
                             let email = currentUser.email
                             let profileImage = model.profileImage
@@ -39,14 +42,16 @@ struct LaunchPage: View {
                                 .scaledToFill()
                                 .frame(width: 175, height: 175)
                                 .clipShape(Circle())
-                                .overlay(Circle().stroke(.black, lineWidth: 5))
+                                .overlay(Circle().stroke(lineWidth: 5))
                                 .padding()
 
+                            Spacer()
+                            
                             Group {
                                 Text(email ?? "")
                                     .padding(.top)
                                 Text(String(repeating: "•", count: model.passwordCount))
-                            }.font(.headline)
+                            }.font(.system(size: 20, weight: .regular, design: .rounded))
                         }
 
                         Spacer()
@@ -57,7 +62,7 @@ struct LaunchPage: View {
                             ZStack {
                                 Rectangle()
                                     .cornerRadius(50)
-                                    .foregroundColor(.white)
+                                    .foregroundColor(colorScheme == .light ? .white : .black)
                                     .frame(height: 55)
                                     .overlay(RoundedRectangle(cornerRadius: 50)
                                         .stroke(Color.green,
@@ -65,7 +70,7 @@ struct LaunchPage: View {
                                     .padding(40)
 
                                 Text("Continue")
-                                    .bold()
+                                    .font(.system(size: 25, weight: .bold, design: .rounded))
                                     .foregroundColor(.green)
                             }
                         }.padding()

@@ -19,10 +19,7 @@ struct Recipe_App: App {
             LaunchPage()
                 .environmentObject(RecipeModel())
             
-            // TODO: Add highlights
-            // TODO: (Maybe) Delete recipes
-            // TODO: Add name to recipes
-            // TODO: Add bar at top of add recipe
+            // TODO: Rearrange Ingredients, Directions and Highlights
         }
     }
 }

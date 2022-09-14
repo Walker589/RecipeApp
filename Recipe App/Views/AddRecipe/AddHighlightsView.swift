@@ -1,19 +1,19 @@
 //
-//  AddDirectionsView.swift
+//  AddHighlightsView.swift
 //  Recipe App
 //
-//  Created by Ali Earp on 02/09/2022.
+//  Created by Ali Earp on 13/09/2022.
 //
 
 import SwiftUI
 import Firebase
 import FirebaseAuth
 
-struct AddDirectionsView: View {
+struct AddHighlightsView: View {
     @EnvironmentObject var model: RecipeModel
     @Environment(\.colorScheme) var colorScheme
     
-    @State private var direction = ""
+    @State private var highlight = ""
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -21,7 +21,7 @@ struct AddDirectionsView: View {
                 HStack(spacing: 0) {
                     Rectangle()
                         .foregroundColor(Color(.lightGray))
-                        .frame(width: geo.size.width / 4)
+                        .frame(width: geo.size.width / 2)
                     
                     Rectangle()
                         .foregroundColor(.green)
@@ -29,21 +29,21 @@ struct AddDirectionsView: View {
                     
                     Rectangle()
                         .foregroundColor(Color(.lightGray))
-                        .frame(width: geo.size.width / 2)
+                        .frame(width: geo.size.width / 4)
                 }
             }.frame(height: 5)
             
             VStack(alignment: .leading) {
                 HStack {
-                    Text("Add Directions")
+                    Text("Add Highlights")
                         .bold()
                         .font(Font.custom("Avenir Heavy", size: 24))
                     
                     Spacer()
                     
                     Button("Clear") {
-                        model.directions = [String]()
-                        model.addStep = false
+                        model.highlights = [String]()
+                        model.addHighlight = false
                         model.errorMessage = ""
                     }
                 }.padding(.top)
@@ -53,19 +53,19 @@ struct AddDirectionsView: View {
                     .font(.headline)
                     .padding([.bottom, .horizontal])
                 
-                Text("\(model.directions.count) \(model.directions.count == 1 ? "STEP" : "STEPS")")
+                Text("\(model.highlights.count) \(model.highlights.count == 1 ? "HIGHLIGHT" : "HIGHLIGHTS")")
                     .bold()
                     .font(.subheadline)
                     .padding(.top)
                 Divider()
                 
-                if model.addStep == true {
+                if model.addHighlight == true {
                     HStack(alignment: .top) {
                         if #available(iOS 16.0, *) {
-                            TextField("Direction", text: $direction, axis: .vertical)
+                            TextField("Highlight", text: $highlight, axis: .vertical)
                                 .padding(.bottom, 5)
                         } else {
-                            TextEditor(text: $direction)
+                            TextEditor(text: $highlight)
                                 .padding(.bottom, 5)
                                 .frame(height: 50)
                         }
@@ -73,15 +73,15 @@ struct AddDirectionsView: View {
                         Spacer()
                         
                         Button {
-                            let cleanedDirection = direction.trimmingCharacters(in: .whitespacesAndNewlines)
+                            let cleanedHighlight = highlight.trimmingCharacters(in: .whitespacesAndNewlines)
                             
-                            if cleanedDirection == "" {
+                            if cleanedHighlight == "" {
                                 return
                             }
                             
-                            model.directions.append(cleanedDirection)
-                            direction = ""
-                            model.addStep = false
+                            model.highlights.append(cleanedHighlight)
+                            highlight = ""
+                            model.addHighlight = false
                         } label: {
                             Text("Add")
                                 .bold()
@@ -92,20 +92,20 @@ struct AddDirectionsView: View {
                 
                 VStack(alignment: .leading) {
                     ScrollView(showsIndicators: false) {
-                        ForEach(0..<model.directions.count, id: \.self) { index in
+                        ForEach(0..<model.highlights.count, id: \.self) { index in
                             HStack(alignment: .top) {
-                                if let stepNumber = index {
-                                    Text("\(stepNumber + 1). ")
+                                if let highlightNumber = index {
+                                    Text("\(highlightNumber + 1). ")
                                         .frame(width: 25)
                                         .lineLimit(1)
                                         .font(.headline)
-                                    Text(model.directions[index])
+                                    Text(model.highlights[index])
                                 } else {
-                                    Text(model.directions[index])
+                                    Text(model.highlights[index])
                                 }
                                 Spacer()
                                 Button {
-                                    model.directions.remove(at: index)
+                                    model.highlights.remove(at: index)
                                 } label: {
                                     Image(systemName: "trash.fill")
                                         .resizable()
@@ -122,7 +122,7 @@ struct AddDirectionsView: View {
                 Divider()
                 
                 Button {
-                    model.addStep = true
+                    model.addHighlight = true
                 } label: {
                     ZStack {
                         Rectangle()
@@ -133,7 +133,7 @@ struct AddDirectionsView: View {
                                 .stroke(Color.green,
                                         lineWidth: 1))
                         
-                        Text("+ Add a Step")
+                        Text("+ Add a Highlight")
                             .font(.system(size: 20, weight: .bold, design: .rounded))
                             .foregroundColor(.green)
                     }

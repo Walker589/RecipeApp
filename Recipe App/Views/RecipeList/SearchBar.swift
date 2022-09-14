@@ -8,19 +8,21 @@
 import SwiftUI
 
 struct SearchBar: View {
+    @Environment(\.colorScheme) var colorScheme
+    
     @Binding var filterBy: String
     
     var body: some View {
         ZStack {
             Rectangle()
-                .foregroundColor(.white)
+                .foregroundColor(colorScheme == .light ? .white : Color(.darkGray))
                 .cornerRadius(5)
                 .shadow(radius: 5)
             HStack {
                 Image(systemName: "magnifyingglass")
                 
                 TextField("Filter by...", text: $filterBy)
-                    .foregroundColor(.black)
+                    .foregroundColor(.white)
                 
                 Button {
                     filterBy = ""
@@ -29,7 +31,7 @@ struct SearchBar: View {
                 }
             }.padding()
         }
-        .foregroundColor(.gray)
+        .foregroundColor(colorScheme == .light ? .gray : .white)
         .frame(height: 48)
     }
 }

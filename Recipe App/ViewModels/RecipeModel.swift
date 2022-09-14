@@ -16,7 +16,6 @@ class RecipeModel : ObservableObject {
     let storage = Storage.storage()
     
     @Published var loggedIn = false
-    @Published var loginMode = true
     @Published var fetchedRemoteData = false
     
     @Published var profileImage: UIImage?
@@ -26,10 +25,10 @@ class RecipeModel : ObservableObject {
     @Published var recipeName = ""
     @Published var ingredients = [Ingredient]()
     @Published var directions = [String]()
+    @Published var highlights = [String]()
     @Published var cuisine = ""
     @Published var prepTime = ""
     @Published var servings = ""
-    @Published var isPrivate = true
     @Published var recipeImage: UIImage?
     
     @Published var pageNumber = 1
@@ -37,6 +36,7 @@ class RecipeModel : ObservableObject {
     
     @Published var addIngredientLine = false
     @Published var addStep = false
+    @Published var addHighlight = false
     
     @Published var recipes = [Recipe]()
     
@@ -150,7 +150,7 @@ class RecipeModel : ObservableObject {
                             }
                         }
 
-                        let storageRef = self.storage.reference().child("\(Auth.auth().currentUser?.uid ?? "")/images/\(recipe.name.lowercased()).jpg")
+                        let storageRef = self.storage.reference().child("\(Auth.auth().currentUser?.uid ?? "")/recipeImages/\(recipe.name.lowercased()).jpg")
 
                         storageRef.getData(maxSize: Int64(1000000)) { data, error in
                             if let error = error {
@@ -215,7 +215,7 @@ class RecipeModel : ObservableObject {
             if wholePortions > 1 || (wholePortions == 1 && numerator > 0) {
                 let abbreviations = ["cm", "'", "\"", "kg", "ml", "g", "mg", "m", "l", "yd", "t Mg", "t", "st", "lb", "oz", "gal", "pt", "qt", "fl oz", "tbsp", "tsp", "km", "mi"]
                 // Calculate Appropriate Suffix
-                if unit.suffix(1) == "s" || abbreviations.contains(unit) {
+                if unit.suffix(1) == "s" || abbreviations.contains(unit) || unit == "" {
                     
                 } else if unit.suffix(2) == "ch" {
                     unit += "es"
@@ -256,94 +256,65 @@ class RecipeModel : ObservableObject {
         let cleanedPrepTime = prepTime.trimmingCharacters(in: .whitespacesAndNewlines)
         let cleanedServings = servings.trimmingCharacters(in: .whitespacesAndNewlines)
         
-        if cleanedRecipeName != "" && cleanedCuisine != "" && cleanedPrepTime != "" && cleanedServings != "" && recipeImage != nil {
+        let nonRemovables = ["Baked Teriyaki Chicken", "Mushroom Risotto", "Eggplant Parmesan"]
+        
+        if cleanedRecipeName != "" && cleanedCuisine != "" && cleanedPrepTime != "" && cleanedServings != "" && recipeImage != nil && !nonRemovables.contains(cleanedRecipeName) {
             let db = Firestore.firestore()
             if let currentUser = Auth.auth().currentUser {
-                if self.isPrivate {
-                    let users = db.collection("users")
-                    let currentUserRecipes = users.document(currentUser.uid)
-                    let recipes = currentUserRecipes.collection("recipes")
-                    let recipeDocument = recipes.document(cleanedRecipeName)
-                    
-                    recipes.getDocuments { snapshot, error in
-                        if let error = error {
-                            print(error.localizedDescription)
-                        } else if let snapshot = snapshot {
-                            for doc in snapshot.documents {
-                                if cleanedRecipeName == doc.documentID {
-                                    self.errorMessage = "Recipe with same name already exists"
-                                    return
-                                }
+                let users = db.collection("users")
+                let currentUserRecipes = users.document(currentUser.uid)
+                let recipes = currentUserRecipes.collection("recipes")
+                let recipeDocument = recipes.document(cleanedRecipeName)
+                
+                recipes.getDocuments { snapshot, error in
+                    if let error = error {
+                        print(error.localizedDescription)
+                    } else if let snapshot = snapshot {
+                        for doc in snapshot.documents {
+                            if cleanedRecipeName == doc.documentID {
+                                self.errorMessage = "Recipe with same name already exists"
+                                return
                             }
-                            
-                            self.errorMessage = ""
-                            
-                            recipeDocument.setData([
-                                "name" : cleanedRecipeName,
-                                "directions" : self.directions,
-                                "cuisine" : cleanedCuisine,
-                                "prepTime" : cleanedPrepTime,
-                                "servings" : Int(cleanedServings) ?? 1,
-                                "featured" : false
-                            ])
-                            
-                            let ingredientsCollection = recipeDocument.collection("ingredients")
-
-                            for ingredient in self.ingredients {
-                                ingredientsCollection.addDocument(data: [
-                                    "name" : ingredient.name,
-                                    "num" : ingredient.num ?? 1,
-                                    "denom" : ingredient.denom ?? 1,
-                                    "unit" : ingredient.unit ?? ""
-                                ])
-                            }
-                            
-                            self.errorMessage = ""
-                            
-                            self.uploadImage(image: self.recipeImage!, name: self.recipeName)
                         }
-                    }
-                } else {
-                    let recipes = db.collection("recipes")
-                    let recipeDocument = recipes.document(cleanedRecipeName)
-                    
-                    recipes.getDocuments { snapshot, error in
-                        if let error = error {
-                            print(error.localizedDescription)
-                        } else if let snapshot = snapshot {
-                            for doc in snapshot.documents {
-                                if cleanedRecipeName == doc.documentID {
-                                    self.errorMessage = "Recipe with same name already exists"
-                                    return
-                                }
-                            }
-                            
-                            self.errorMessage = ""
-                            
-                            recipeDocument.setData([
-                                "name" : cleanedRecipeName,
-                                "directions" : self.directions,
-                                "cuisine" : cleanedCuisine,
-                                "prepTime" : cleanedPrepTime,
-                                "servings" : Int(cleanedServings) ?? 1,
-                                "featured" : false
-                            ])
-                            
-                            let ingredientsCollection = recipeDocument.collection("ingredients")
+                        
+                        self.errorMessage = ""
+                        
+                        recipeDocument.setData([
+                            "name" : cleanedRecipeName,
+                            "directions" : self.directions,
+                            "highlights" : self.highlights,
+                            "cuisine" : cleanedCuisine,
+                            "prepTime" : cleanedPrepTime,
+                            "servings" : Int(cleanedServings) ?? 1,
+                            "featured" : false
+                        ])
+                        
+                        let ingredientsCollection = recipeDocument.collection("ingredients")
 
-                            for ingredient in self.ingredients {
-                                ingredientsCollection.addDocument(data: [
-                                    "name" : ingredient.name,
-                                    "num" : ingredient.num ?? 1,
-                                    "denom" : ingredient.denom ?? 1,
-                                    "unit" : ingredient.unit ?? ""
-                                ])
-                            }
-                            
-                            self.errorMessage = ""
-                            
-                            self.uploadImage(image: self.recipeImage!, name: self.recipeName)
+                        for ingredient in self.ingredients {
+                            ingredientsCollection.addDocument(data: [
+                                "name" : ingredient.name,
+                                "num" : ingredient.num ?? 1,
+                                "denom" : ingredient.denom ?? 1,
+                                "unit" : ingredient.unit ?? ""
+                            ])
                         }
+                        
+                        self.errorMessage = ""
+                        
+                        self.uploadImage(image: self.recipeImage!, name: self.recipeName)
+                        
+                        let recipe = Recipe()
+                        recipe.name = cleanedRecipeName
+                        recipe.directions = self.directions
+                        recipe.cuisine = self.cuisine
+                        recipe.prepTime = self.prepTime
+                        recipe.servings = Int(self.servings) ?? 1
+                        recipe.featured = false
+                        recipe.ingredients = self.ingredients
+                        recipe.image = self.recipeImage?.jpegData(compressionQuality: 0.2) ?? Data()
+                        
+                        self.cancelAddRecipe()
                     }
                 }
             }

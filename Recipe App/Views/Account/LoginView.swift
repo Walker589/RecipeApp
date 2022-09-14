@@ -11,6 +11,7 @@ import FirebaseFirestore
 
 struct LoginView: View {
     @EnvironmentObject var model: RecipeModel
+    @Environment(\.colorScheme) var colorScheme
     
     @State private var isShowingImagePicker = false
     @State private var recipeImage: UIImage?
@@ -40,7 +41,7 @@ struct LoginView: View {
                     .scaledToFill()
                     .frame(width: 175, height: 175)
                     .clipShape(Circle())
-                    .overlay(Circle().stroke(.black, lineWidth: 5))
+                    .overlay(Circle().stroke(lineWidth: 5))
                     .padding(.top)
                     .onTapGesture {
                         isShowingImagePicker = true
@@ -56,7 +57,10 @@ struct LoginView: View {
                 .bold()
                 .padding()
             
-            Spacer()
+            Group {
+                Spacer()
+                Spacer()
+            }
             
             Picker(selection: $loginMode, label: Text("Picker")) {
                 Text("Login")
@@ -68,16 +72,21 @@ struct LoginView: View {
             Group {
                 TextField("Email", text: $email)
                     .autocapitalization(.none)
-                    .disableAutocorrection(true)
+                    .autocorrectionDisabled(true)
                 if loginMode == false {
                     TextField("Name", text: $name)
+                        .autocorrectionDisabled(true)
                 }
                 SecureField("Password", text: $password)
+                    .autocapitalization(.none)
+                    .autocorrectionDisabled(true)
             }
             
             if let errorMessage = errorMessage {
                 Text(errorMessage).foregroundColor(.red)
             }
+            
+            Spacer()
             
             Button {
                 if email != "" && password != "" {
@@ -102,7 +111,6 @@ struct LoginView: View {
                                 self.errorMessage = nil
                                 model.uploadImage(image: recipeImage!, name: "profile image", profileImage: true)
                                 model.uploadUserData(name: name, passwordCount: password.count)
-                                model.loginMode = false
                                 model.checkLogin()
                             }
                         }
@@ -116,6 +124,7 @@ struct LoginView: View {
                         .cornerRadius(10)
                     Text(buttonText)
                         .foregroundColor(.white)
+                        .bold()
                 }
             }
             

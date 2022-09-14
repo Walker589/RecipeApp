@@ -22,12 +22,16 @@ struct AddRecipeTabView: View {
                 .tag(2)
                 .padding(.horizontal, 10)
             
-            AddRecipeView()
+            AddHighlightsView()
                 .tag(3)
                 .padding(.horizontal, 10)
+            
+            AddRecipeView()
+                .tag(4)
+                .padding(.horizontal, 10)
         }
-        .tabViewStyle(PageTabViewStyle(indexDisplayMode: .always))
-        .indexViewStyle(PageIndexViewStyle(backgroundDisplayMode: .always))
+        .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
+        .indexViewStyle(PageIndexViewStyle(backgroundDisplayMode: .never))
     }
 }
 

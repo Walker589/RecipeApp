@@ -12,9 +12,11 @@ struct FeaturedViewDetails: View {
     var info: String
     
     var body: some View {
-        Text(title)
-            .font(Font.custom("Avenir Heavy", size: 16))
-        Text(info)
-            .font(Font.custom("Avenir", size: 15))
+        VStack(alignment: .leading) {
+            Text(title)
+                .font(Font.custom("Avenir Heavy", size: 16))
+            Text(info)
+                .font(Font.custom("Avenir", size: 15))
+        }
     }
 }
